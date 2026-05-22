@@ -1,4 +1,47 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><title>나도 소통빌런일까? | 소통 유형 자가진단</title><meta name="description" content="16가지 소통빌런 유형 자가진단"><script src="https://unpkg.com/react@18/umd/react.production.min.js"></script><script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><style>body{margin:0;background:#0d0b18;}*{-webkit-tap-highlight-color:transparent;}</style></head><body><div id="root"></div><script>const window_storage={_key:function(k,s){return(s?'sh_':'lc_')+k;},get:async function(k,s){const v=localStorage.getItem(this._key(k,s));if(v===null)throw new Error('nf');return{key:k,value:v,shared:!!s};},set:async function(k,v,s){localStorage.setItem(this._key(k,s),v);return{key:k,value:v,shared:!!s};},delete:async function(k,s){localStorage.removeItem(this._key(k,s));return{key:k,deleted:true,shared:!!s};}};window.storage=window_storage;</script><script type="text/babel" data-presets="react">const { useState, useEffect, useRef } = React;
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나도 소통빌런일까? | 소통 유형 자가진단</title>
+  <meta name="description" content="16가지 소통빌런 유형 중 내 안에 숨어있는 빌런을 찾아보세요">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>body{margin:0;background:#0d0b18;}</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+const window_storage = {
+  _key: function(key, shared) { return (shared ? 'shared_' : 'local_') + key; },
+  get: async function(key, shared) {
+    try {
+      const val = localStorage.getItem(this._key(key, shared));
+      if(val === null) throw new Error('not found');
+      return { key, value: val, shared: !!shared };
+    } catch(e) { throw e; }
+  },
+  set: async function(key, value, shared) {
+    localStorage.setItem(this._key(key, shared), value);
+    return { key, value, shared: !!shared };
+  },
+  delete: async function(key, shared) {
+    localStorage.removeItem(this._key(key, shared));
+    return { key, deleted: true, shared: !!shared };
+  },
+  list: async function(prefix, shared) {
+    const p = this._key(prefix||'', shared);
+    const keys = Object.keys(localStorage).filter(k => k.startsWith(p));
+    return { keys, shared: !!shared };
+  }
+};
+window.storage = window_storage;
+</script>
+  <script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
+
+
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ⚙️  관리자 설정 — 비밀번호 여기서 변경
@@ -80,54 +123,6 @@ const questions = [
     { text:"회의 끝나고 점심 때 얘기하기로 한다", types:[] },
     { text:"얘기하다가 어느새 30분이 지나 있다", types:["잡담폭격기"] },
     { text:"잡담은 별로 안 좋아해서 바로 안건으로 돌린다", types:[] },
-  ]},
-  { id:13, situation:"팀원이 내 업무 방식에 대해 개선을 제안했다.", options:[
-    { text:"내가 해봐서 아는데 그건 별로야, 지금 방식이 맞아", types:["권위압박러","마이웨이러"] },
-    { text:"칭찬하는 척하며 '그것도 나쁘지 않네~'라고 넘긴다", types:["비꼬기달인"] },
-    { text:"일단 알겠다고만 하고 실제로는 안 바꾼다", types:["예스남발러"] },
-    { text:"좋은 제안이면 적극 검토해본다", types:[] },
-  ]},
-  { id:14, situation:"갑작스럽게 마감 일정이 당겨졌다.", options:[
-    { text:"화가 나서 바로 불만을 표출한다", types:["감정폭발러"] },
-    { text:"알겠다고 했지만 결국 못 맞출 것 같다", types:["예스남발러","말번복달인"] },
-    { text:"조용히 수긍하지만 속으로 부글부글", types:["침묵방관러","감정기복러"] },
-    { text:"일정 조정이 필요한 이유를 차분히 설명한다", types:[] },
-  ]},
-  { id:15, situation:"상사가 무리한 요청을 했다.", options:[
-    { text:"일단 네! 하고 나중에 못한 이유를 댄다", types:["예스남발러","책임회피러"] },
-    { text:"불가능한 이유를 다소 강하게 직접 말한다", types:["팩폭직설러"] },
-    { text:"조용히 수긍하지만 뒤에서 동료에게 토로한다", types:["침묵방관러","뒷담화달인"] },
-    { text:"어렵지만 일정 조율 가능한지 먼저 여쭤본다", types:[] },
-  ]},
-  { id:16, situation:"프로젝트 결과가 좋지 않아 팀 회고를 했다.", options:[
-    { text:"솔직하게 남의 문제점을 팩트로 지적한다", types:["팩폭직설러","권위압박러"] },
-    { text:"내 실수는 외부 상황 탓으로 돌린다", types:["책임회피러"] },
-    { text:"회고 내내 말 한마디 없이 듣기만 한다", types:["침묵방관러"] },
-    { text:"회고가 끝나고 나서야 복도에서 동료에게 털어놓는다", types:["뒷담화달인"] },
-  ]},
-  { id:17, situation:"점심 메뉴를 정하는데 의견이 갈렸다.", options:[
-    { text:"내가 먹고 싶은 걸 강하게 주장한다", types:["마이웨이러","팩폭직설러"] },
-    { text:"아무거나 괜찮다 하고 나중에 불만이다", types:["예스남발러","뒷담화달인"] },
-    { text:"다들 싫어한다는 걸 비꼬며 말한다", types:["비꼬기달인"] },
-    { text:"각자 선호를 물어보고 중간점을 찾는다", types:[] },
-  ]},
-  { id:18, situation:"단체 메일/공지에 오류가 있는 걸 발견했다.", options:[
-    { text:"즉시 전체 회신으로 오류를 지적한다. 알려줘야 하니까", types:["팩폭직설러"] },
-    { text:"발견했지만 굳이 내가 말할 필요 없다고 생각한다", types:["침묵방관러","읽씹장인"] },
-    { text:"담당자한테만 조용히 따로 알려준다", types:[] },
-    { text:"동료한테 '저거 틀린 거 맞지?' 하고 먼저 확인한다", types:["뒷담화달인","애매모호러"] },
-  ]},
-  { id:19, situation:"후배가 처음으로 맡은 업무에서 실수를 했다.", options:[
-    { text:"실수를 바로 지적하고 왜 틀렸는지 설명한다", types:["팩폭직설러","권위압박러"] },
-    { text:"표정으로 실망감을 드러내지만 말은 하지 않는다", types:["감정기복러","침묵방관러"] },
-    { text:"괜찮다고 하고, 나중에 다른 팀원에게 불만을 털어놓는다", types:["예스남발러","뒷담화달인"] },
-    { text:"어떤 부분이 어려웠는지 물어보고 함께 해결한다", types:[] },
-  ]},
-  { id:20, situation:"오늘 회의에서 결론이 흐지부지 끝났다.", options:[
-    { text:"그냥 내가 알아서 판단해서 진행한다", types:["마이웨이러"] },
-    { text:"회의 후 동료에게 '오늘 회의 이상하지 않았냐'고 한다", types:["뒷담화달인"] },
-    { text:"다음 회의 때 다시 물어봐야지 하고 그냥 둔다", types:["침묵방관러","읽씹장인"] },
-    { text:"바로 담당자에게 결론을 확인하는 메시지를 보낸다", types:[] },
   ]},
 ];
 
@@ -249,45 +244,7 @@ const V = {
     ]},
 };
 
-
-// ── 태그별 공통 배경색 ──
-const TAG_COLOR = {
-  "공격형":   { bg:"rgba(231,76,60,0.14)",  border:"rgba(231,76,60,0.38)"  },
-  "회피형":   { bg:"rgba(39,174,96,0.14)",  border:"rgba(39,174,96,0.38)"  },
-  "교란형":   { bg:"rgba(142,68,173,0.14)", border:"rgba(142,68,173,0.38)" },
-  "자기중심형":{ bg:"rgba(41,128,185,0.14)", border:"rgba(41,128,185,0.38)" },
-};
-
 const VList = Object.keys(V);
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 빌런 조합 결과
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const COMBO = {
-  "팩폭직설러+마이웨이러":  { title:"💣 독불장군 직설가",   desc:"옳은 말을 하지만 혼자서만, 내 방식으로만 해요. 주변이 설득되기 전에 이미 지쳐있어요." },
-  "팩폭직설러+권위압박러":  { title:"👊 제왕적 직설러",    desc:"경험도 많고 말도 세서 주변이 꼼짝 못해요. 팀원들이 입을 다물기 시작해요." },
-  "팩폭직설러+감정폭발러":  { title:"🌪️ 폭풍 직설 콤보",  desc:"팩트와 감정이 동시에 터지면 아무도 반박을 못해요." },
-  "감정폭발러+감정기복러":  { title:"🌩️ 예측불가 감정 태풍", desc:"오전과 오후가 완전히 다른 사람이에요. 동료들이 눈치 보느라 일을 못해요." },
-  "예스남발러+책임회피러":  { title:"🤹 만능 핑계 제조기", desc:"다 할 수 있다고 했지만 결국 핑계만 남아요. 믿었던 동료에게 실망을 줘요." },
-  "침묵방관러+읽씹장인":    { title:"👻 완전 투명인간",    desc:"거기 있는 건 맞는데 존재감이 0에 가까워요. 협업이 사실상 불가능해요." },
-  "뒷담화달인+비꼬기달인":  { title:"🕵️ 이중 스파이",    desc:"앞에서 웃고 뒤에서 찌르는 최강 콤보예요. 팀 신뢰가 서서히 무너져요." },
-  "부정대마왕+마이웨이러":  { title:"🏰 철벽 수비대",     desc:"새로운 건 다 막고 기존 방식만 고수해요. 혁신이 들어올 틈이 없어요." },
-  "잡담폭격기+말번복달인":  { title:"🎪 혼돈의 회의 주역", desc:"안건은 없고 말만 많고 결론도 없어요. 회의가 끝나도 아무것도 안 남아요." },
-  "정보잠금러+마이웨이러":  { title:"🔒 외로운 성주",     desc:"정보도 방식도 나만 알고 나만 해요. 팀이 아닌 혼자 일하는 거예요." },
-  "애매모호러+말번복달인":  { title:"🌫️ 연기 속 미로",   desc:"어제 말도 다르고 오늘 말도 달라요. 무엇을 믿어야 할지 아무도 몰라요." },
-  "예스남발러+말번복달인":  { title:"🎭 신뢰 파괴자",     desc:"처음엔 다 된다더니 나중엔 말이 바뀌어요. 동료들이 더 이상 믿지 않아요." },
-  "감정기복러+뒷담화달인":  { title:"💢 감정 폭탄 전달자", desc:"기분이 나쁘면 뒤에서 털어놔요. 부서 전체 분위기가 출렁여요." },
-  "침묵방관러+책임회피러":  { title:"🪨 돌처럼 무거운 짐", desc:"말도 없고 책임도 안 져요. 결국 다른 팀원들이 다 떠안게 돼요." },
-  "권위압박러+부정대마왕":  { title:"🚧 이중 방어벽",     desc:"경험으로 막고 NO로 막아요. 팀원들의 아이디어가 싹부터 잘려요." },
-};
-
-function getCombo(top, second) {
-  if (!second) return null;
-  const k1 = top + "+" + second;
-  const k2 = second + "+" + top;
-  return COMBO[k1] || COMBO[k2] || null;
-}
-
 const DEPTS = ["발전부","기술부","대외협력팀"];
 
 function getResult(sc) {
@@ -450,7 +407,7 @@ function App() {
         </div>
 
         <StatRow>
-          <St n="20" l="질문 수"/><Dv/><St n="5분" l="소요 시간"/><Dv/><St n="16" l="빌런 유형"/>
+          <St n="12" l="질문 수"/><Dv/><St n="3분" l="소요 시간"/><Dv/><St n="16" l="빌런 유형"/>
         </StatRow>
 
         <CB>
@@ -507,7 +464,6 @@ function App() {
   // ── RESULT ──────────────────────────────
   if(step==="result"&&result){
     const v=V[result.top], sv=result.second?V[result.second]:null;
-    const combo=getCombo(result.top,result.second);
     const others=VList.filter(n=>n!==result.top&&n!==result.second).slice(0,8);
     return (
       <Wrap>
@@ -546,19 +502,6 @@ function App() {
               ))}
             </div>
           </div>
-
-          {/* 빌런 조합 */}
-          {combo&&(
-            <div style={{background:"rgba(255,215,0,0.08)",border:"1px solid rgba(255,215,0,0.28)",borderRadius:14,padding:"14px 16px",marginBottom:14}}>
-              <div style={{...S.sl,color:"rgba(255,210,0,0.85)",marginBottom:8}}>✨ 나의 빌런 조합</div>
-              <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:15,color:"rgba(255,215,0,0.95)",marginBottom:6}}>{combo.title}</div>
-              <div style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:"rgba(255,255,255,0.5)",marginBottom:4}}>
-                {result.top} + {result.second}
-              </div>
-              <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"rgba(255,255,255,0.78)",lineHeight:1.65}}>{combo.desc}</p>
-            </div>
-          )}
-
 
           {sv&&result.second&&(
             <button className="sv-btn" onClick={()=>openDetail(result.second,"result")}>
@@ -615,7 +558,7 @@ function App() {
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9}}>
             {filtered.map(name=>{const dv=V[name];return(
               <button key={name} className="dex" onClick={()=>openDetail(name,"browse")}
-                style={{background:TAG_COLOR[dv.tag]?.bg||`rgba(0,0,0,0.25)`,border:`1.5px solid ${TAG_COLOR[dv.tag]?.border||dv.color+'44'}`}}>
+                style={{background:`linear-gradient(135deg,${dv.color}22,rgba(0,0,0,0.25))`,borderColor:`${dv.color}44`}}>
                 <div style={{fontSize:28,marginBottom:4}}>{dv.emoji}</div>
                 <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:12.5,color:"white",lineHeight:1.3}}>{name}</div>
                 <div style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:10.5,color:"rgba(255,255,255,0.4)",marginTop:3,lineHeight:1.4}}>{dv.tagline}</div>
@@ -667,7 +610,7 @@ function App() {
               <div style={{...S.sl,marginBottom:8}}>같은 {dv.tag} 빌런들</div>
               <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
                 {sameTag.map(name=>(
-                  <button key={name} className="chip" onClick={()=>setDetailName(name)} style={{background:TAG_COLOR[dv.tag]?.bg,borderColor:TAG_COLOR[dv.tag]?.border}}>
+                  <button key={name} className="chip" onClick={()=>setDetailName(name)} style={{borderColor:`${V[name].color}55`}}>
                     <span>{V[name].emoji}</span>
                     <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.75)"}}>{name}</span>
                   </button>
@@ -905,4 +848,10 @@ input:focus,select:focus{border-color:rgba(167,139,250,0.6)!important;outline:no
 input::placeholder{color:rgba(255,255,255,0.22);}
 select option{background:#1a1730;color:white;}
 `;
-const root = ReactDOM.createRoot(document.getElementById('root'));root.render(<App />);</script></body></html>
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+  </script>
+</body>
+</html>
