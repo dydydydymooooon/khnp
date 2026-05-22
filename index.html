@@ -473,21 +473,9 @@ function App() {
     }
   };
 
-  const handleCopyLink = async () => {
-    const url = window.location.href;
-    try {
-      await navigator.clipboard.writeText(url);
-      alert("링크가 복사됐어요! 🔗");
-    } catch(e) {
-      // fallback
-      const el = document.createElement("textarea");
-      el.value = url;
-      document.body.appendChild(el);
-      el.select();
-      try { document.execCommand("copy"); alert("링크가 복사됐어요! 🔗"); }
-      catch(e2) { alert("복사 실패. 주소창에서 직접 복사해 주세요."); }
-      document.body.removeChild(el);
-    }
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("테스트 링크가 복사되었습니다! 친구들에게 공유해보세요. 🌱");
   };
 
   const openDetail=(name,from)=>{ setDetailName(name); setDetailFrom(from); setStep("detail"); };
@@ -621,109 +609,104 @@ function App() {
       <Wrap>
         <Card cls="anim" scroll>
           <div ref={resultRef}>
-          <div style={S.userBadge}>
-            <span>👤</span>
-            <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"rgba(255,255,255,0.8)"}}>
-              {profile.dept&&<span style={{color:"rgba(255,255,255,0.42)"}}>{profile.dept} · </span>}
-              <b style={{color:"white"}}>{profile.nickname||"익명"}</b>님의 결과
-            </span>
-          </div>
-
-          <CB mb={4}><Lbl>나의 소통 유형은</Lbl></CB>
-          <CB mb={16}>
-            <div style={{background:`linear-gradient(135deg,${v.color}33,${v.color}55)`,border:`2px solid ${v.color}88`,borderRadius:20,padding:"18px 30px",display:"inline-block"}}>
-              <div className="eb" style={{fontSize:46,marginBottom:6}}>{v.emoji}</div>
-              <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:24,color:"white"}}>{result.top}</div>
-              <div style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:`${v.color}cc`,marginTop:4}}>{v.tagline}</div>
-              <span style={{...S.badge,background:TAG_COLOR[v.tag]?.bg,color:TAG_COLOR[v.tag]?.label||v.color,border:`1px solid ${TAG_COLOR[v.tag]?.border||v.color}`,marginTop:8,fontWeight:600}}>{v.tag}</span>
+            <div style={S.userBadge}>
+              <span>👤</span>
+              <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"rgba(255,255,255,0.8)"}}>
+                {profile.dept&&<span style={{color:"rgba(255,255,255,0.42)"}}>{profile.dept} · </span>}
+                <b style={{color:"white"}}>{profile.nickname||"익명"}</b>님의 결과
+              </span>
             </div>
-          </CB>
 
-          <div style={S.descBox}><p style={S.descTxt}>{v.desc}</p></div>
-
-          {/* 유형별 궁합 */}
-          {compat&&(
-            <div style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:14,padding:"14px 16px",marginBottom:14}}>
-              <div style={{...S.sl,marginBottom:10}}>💞 유형별 궁합</div>
-              <div style={{display:"flex",flexDirection:"column",gap:10}}>
-                <div style={{display:"flex",alignItems:"flex-start",gap:10,background:"rgba(46,213,115,0.08)",border:"1px solid rgba(46,213,115,0.25)",borderRadius:10,padding:"10px 12px"}}>
-                  <span style={{fontSize:22,flexShrink:0}}>💚</span>
-                  <div>
-                    <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"#2ed573",marginBottom:3}}>{V[compat.best]?.emoji} {compat.best} — 잘 맞아요</div>
-                    <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.55}}>{compat.bestDesc}</p>
-                  </div>
-                </div>
-                <div style={{display:"flex",alignItems:"flex-start",gap:10,background:"rgba(255,71,87,0.08)",border:"1px solid rgba(255,71,87,0.25)",borderRadius:10,padding:"10px 12px"}}>
-                  <span style={{fontSize:22,flexShrink:0}}>🔴</span>
-                  <div>
-                    <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"#ff4757",marginBottom:3}}>{V[compat.worst]?.emoji} {compat.worst} — 조심해요</div>
-                    <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.55}}>{compat.worstDesc}</p>
-                  </div>
-                </div>
+            <CB mb={4}><Lbl>나의 소통 유형은</Lbl></CB>
+            <CB mb={16}>
+              <div style={{background:`linear-gradient(135deg,${v.color}33,${v.color}55)`,border:`2px solid ${v.color}88`,borderRadius:20,padding:"18px 30px",display:"inline-block"}}>
+                <div className="eb" style={{fontSize:46,marginBottom:6}}>{v.emoji}</div>
+                <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:24,color:"white"}}>{result.top}</div>
+                <div style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:`${v.color}cc`,marginTop:4}}>{v.tagline}</div>
+                <span style={{...S.badge,background:TAG_COLOR[v.tag]?.bg,color:TAG_COLOR[v.tag]?.label||v.color,border:`1px solid ${TAG_COLOR[v.tag]?.border||v.color}`,marginTop:8,fontWeight:600}}>{v.tag}</span>
               </div>
-            </div>
-          )}
+            </CB>
 
-          <div style={{marginBottom:16}}>
-            <div style={{...S.sl,marginBottom:10}}>💡 구체적인 성장 팁</div>
-            <div style={{display:"flex",flexDirection:"column",gap:9}}>
-              {v.tips.map((t,i)=>(
-                <div key={i} style={{background:`linear-gradient(135deg,${v.color}18,transparent)`,border:`1px solid ${v.color}30`,borderRadius:12,padding:"12px 14px"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
-                    <span style={{fontSize:15}}>{t.icon}</span>
-                    <span style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"white"}}>{t.title}</span>
-                  </div>
-                  <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12.5,color:"rgba(255,255,255,0.72)",lineHeight:1.7,whiteSpace:"pre-line"}}>{t.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+            <div style={S.descBox}><p style={S.descTxt}>{v.desc}</p></div>
 
-
-          {sv&&result.second&&(
-            <button className="sv-btn" onClick={()=>openDetail(result.second,"result")}>
-              <div style={{fontSize:24}}>{sv.emoji}</div>
-              <div style={{flex:1}}>
-                <div style={S.tiny}>숨어있는 두 번째 유형</div>
-                <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:14,color:"white",marginTop:2}}>{result.second}</div>
-                <div style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.4)",marginTop:2}}>{sv.tagline} · 자세히 보기 →</div>
-              </div>
-              <span style={{color:"rgba(255,255,255,0.25)",fontSize:18}}>›</span>
-            </button>
-          )}
-
-          <div style={{borderTop:"1px solid rgba(255,255,255,0.07)",paddingTop:14,marginBottom:14}}>
-            <div style={{...S.sl,marginBottom:9}}>🗂️ 다른 빌런 유형 둘러보기</div>
-            <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-              {others.map(name=>(
-                <button key={name} className="chip" onClick={()=>openDetail(name,"result")} style={{borderColor:`${V[name].color}55`}}>
-                  <span>{V[name].emoji}</span>
-                  <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.75)"}}>{name}</span>
-                </button>
-              ))}
-              <button className="chip" onClick={()=>setStep("browse")} style={{borderColor:"rgba(255,255,255,0.18)"}}>
-                <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.45)"}}>전체 16종 →</span>
+            {/* 저장/공유 버튼 — 설명 바로 아래 */}
+            <div style={{display:"flex",gap:8,marginBottom:16}}>
+              <button onClick={handleSaveImage} disabled={saving}
+                style={{flex:1,background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:12,padding:"12px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"rgba(255,255,255,0.85)",transition:"all .2s"}}>
+                {saving?"저장 중…":"📸 이미지 저장"}
+              </button>
+              <button onClick={handleCopyLink}
+                style={{flex:1,background:"linear-gradient(135deg,rgba(167,139,250,0.2) 0%,rgba(244,114,182,0.2) 100%)",border:"1px solid rgba(167,139,250,0.4)",borderRadius:12,padding:"12px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"white",transition:"all .2s"}}>
+                🔗 링크 복사
               </button>
             </div>
-          </div>
+
+            {/* 유형별 궁합 */}
+            {compat&&(
+              <div style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:14,padding:"14px 16px",marginBottom:14}}>
+                <div style={{...S.sl,marginBottom:10}}>💞 유형별 궁합</div>
+                <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                  <div style={{display:"flex",alignItems:"flex-start",gap:10,background:"rgba(46,213,115,0.08)",border:"1px solid rgba(46,213,115,0.25)",borderRadius:10,padding:"10px 12px"}}>
+                    <span style={{fontSize:22,flexShrink:0}}>💚</span>
+                    <div>
+                      <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"#2ed573",marginBottom:3}}>{V[compat.best]?.emoji} {compat.best} — 잘 맞아요</div>
+                      <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.55}}>{compat.bestDesc}</p>
+                    </div>
+                  </div>
+                  <div style={{display:"flex",alignItems:"flex-start",gap:10,background:"rgba(255,71,87,0.08)",border:"1px solid rgba(255,71,87,0.25)",borderRadius:10,padding:"10px 12px"}}>
+                    <span style={{fontSize:22,flexShrink:0}}>🔴</span>
+                    <div>
+                      <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"#ff4757",marginBottom:3}}>{V[compat.worst]?.emoji} {compat.worst} — 조심해요</div>
+                      <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.55}}>{compat.worstDesc}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div style={{marginBottom:16}}>
+              <div style={{...S.sl,marginBottom:10}}>💡 구체적인 성장 팁</div>
+              <div style={{display:"flex",flexDirection:"column",gap:9}}>
+                {v.tips.map((t,i)=>(
+                  <div key={i} style={{background:`linear-gradient(135deg,${v.color}18,transparent)`,border:`1px solid ${v.color}30`,borderRadius:12,padding:"12px 14px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                      <span style={{fontSize:15}}>{t.icon}</span>
+                      <span style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"white"}}>{t.title}</span>
+                    </div>
+                    <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12.5,color:"rgba(255,255,255,0.72)",lineHeight:1.7,whiteSpace:"pre-line"}}>{t.body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {sv&&result.second&&(
+              <button className="sv-btn" onClick={()=>openDetail(result.second,"result")}>
+                <div style={{fontSize:24}}>{sv.emoji}</div>
+                <div style={{flex:1}}>
+                  <div style={S.tiny}>숨어있는 두 번째 유형</div>
+                  <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:14,color:"white",marginTop:2}}>{result.second}</div>
+                  <div style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.4)",marginTop:2}}>{sv.tagline} · 자세히 보기 →</div>
+                </div>
+                <span style={{color:"rgba(255,255,255,0.25)",fontSize:18}}>›</span>
+              </button>
+            )}
+
+            <div style={{borderTop:"1px solid rgba(255,255,255,0.07)",paddingTop:14,marginBottom:14}}>
+              <div style={{...S.sl,marginBottom:9}}>🗂️ 다른 빌런 유형 둘러보기</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                {others.map(name=>(
+                  <button key={name} className="chip" onClick={()=>openDetail(name,"result")} style={{borderColor:`${V[name].color}55`}}>
+                    <span>{V[name].emoji}</span>
+                    <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.75)"}}>{name}</span>
+                  </button>
+                ))}
+                <button className="chip" onClick={()=>setStep("browse")} style={{borderColor:"rgba(255,255,255,0.18)"}}>
+                  <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.45)"}}>전체 16종 →</span>
+                </button>
+              </div>
+            </div>
 
           </div>{/* /resultRef */}
-
-          {/* 공유/저장 버튼 3종 */}
-          <div style={{display:"flex",gap:8,marginBottom:12}}>
-            <button onClick={handleShare}
-              style={{flex:1,background:"linear-gradient(135deg,rgba(167,139,250,0.25),rgba(244,114,182,0.25))",border:"1px solid rgba(167,139,250,0.4)",borderRadius:12,padding:"13px 8px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"white",transition:"all .2s"}}>
-              📤 결과 공유
-            </button>
-            <button onClick={handleCopyLink}
-              style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:12,padding:"13px 8px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"rgba(255,255,255,0.8)",transition:"all .2s"}}>
-              🔗 링크 복사
-            </button>
-            <button onClick={handleSaveImage} disabled={saving}
-              style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:12,padding:"13px 8px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"rgba(255,255,255,0.8)",transition:"all .2s"}}>
-              {saving?"저장중…":"📸 이미지 저장"}
-            </button>
-          </div>
 
           <CB style={{borderTop:"1px solid rgba(255,255,255,0.06)",paddingTop:14}}>
             <p style={{...S.micro,marginBottom:12}}>빌런을 자각하는 순간, 더 나은 선택을 할 수 있어요 🌱</p>
@@ -734,7 +717,6 @@ function App() {
     );
   }
 
-  // ── BROWSE ──────────────────────────────
   if(step==="browse"){
     const tags=["전체","공격형","회피형","교란형","자기중심형"];
     const filtered=VList.filter(n=>browseTag==="전체"||V[n].tag===browseTag);
