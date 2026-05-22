@@ -1,47 +1,4 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>나도 소통빌런일까? | 소통 유형 자가진단</title>
-  <meta name="description" content="16가지 소통빌런 유형 중 내 안에 숨어있는 빌런을 찾아보세요">
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <style>body{margin:0;background:#0d0b18;}</style>
-</head>
-<body>
-  <div id="root"></div>
-  <script>
-const window_storage = {
-  _key: function(key, shared) { return (shared ? 'shared_' : 'local_') + key; },
-  get: async function(key, shared) {
-    try {
-      const val = localStorage.getItem(this._key(key, shared));
-      if(val === null) throw new Error('not found');
-      return { key, value: val, shared: !!shared };
-    } catch(e) { throw e; }
-  },
-  set: async function(key, value, shared) {
-    localStorage.setItem(this._key(key, shared), value);
-    return { key, value, shared: !!shared };
-  },
-  delete: async function(key, shared) {
-    localStorage.removeItem(this._key(key, shared));
-    return { key, deleted: true, shared: !!shared };
-  },
-  list: async function(prefix, shared) {
-    const p = this._key(prefix||'', shared);
-    const keys = Object.keys(localStorage).filter(k => k.startsWith(p));
-    return { keys, shared: !!shared };
-  }
-};
-window.storage = window_storage;
-</script>
-  <script type="text/babel" data-presets="react">
-const { useState, useEffect, useRef } = React;
-
-
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><title>나도 소통빌런일까? | 소통 유형 자가진단</title><script src="https://unpkg.com/react@18/umd/react.production.min.js"></script><script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><style>body{margin:0;background:#0d0b18;}*{-webkit-tap-highlight-color:transparent;}</style></head><body><div id="root"></div><script>const window_storage={_key:function(k,s){return(s?"sh_":"lc_")+k;},get:async function(k,s){const v=localStorage.getItem(this._key(k,s));if(v===null)throw new Error("nf");return{key:k,value:v,shared:!!s};},set:async function(k,v,s){localStorage.setItem(this._key(k,s),v);return{key:k,value:v,shared:!!s};},delete:async function(k,s){localStorage.removeItem(this._key(k,s));return{key:k,deleted:true,shared:!!s};}};window.storage=window_storage;</script><script type="text/babel" data-presets="react">const{useState,useEffect,useRef}=React;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ⚙️  관리자 설정 — 비밀번호 여기서 변경
@@ -123,6 +80,54 @@ const questions = [
     { text:"회의 끝나고 점심 때 얘기하기로 한다", types:[] },
     { text:"얘기하다가 어느새 30분이 지나 있다", types:["잡담폭격기"] },
     { text:"잡담은 별로 안 좋아해서 바로 안건으로 돌린다", types:[] },
+  ]},
+  { id:13, situation:"팀원이 내 업무 방식에 대해 개선을 제안했다.", options:[
+    { text:"내가 해봐서 아는데 그건 별로야, 지금 방식이 맞아", types:["권위압박러","마이웨이러"] },
+    { text:"칭찬하는 척하며 '그것도 나쁘지 않네~'라고 넘긴다", types:["비꼬기달인"] },
+    { text:"일단 알겠다고만 하고 실제로는 안 바꾼다", types:["예스남발러"] },
+    { text:"좋은 제안이면 적극 검토해본다", types:[] },
+  ]},
+  { id:14, situation:"갑작스럽게 마감 일정이 당겨졌다.", options:[
+    { text:"화가 나서 바로 불만을 표출한다", types:["감정폭발러"] },
+    { text:"알겠다고 했지만 결국 못 맞출 것 같다", types:["예스남발러","말번복달인"] },
+    { text:"조용히 수긍하지만 속으로 부글부글", types:["침묵방관러","감정기복러"] },
+    { text:"일정 조정이 필요한 이유를 차분히 설명한다", types:[] },
+  ]},
+  { id:15, situation:"상사가 무리한 요청을 했다.", options:[
+    { text:"일단 네! 하고 나중에 못한 이유를 댄다", types:["예스남발러","책임회피러"] },
+    { text:"불가능한 이유를 다소 강하게 직접 말한다", types:["팩폭직설러"] },
+    { text:"조용히 수긍하지만 뒤에서 동료에게 토로한다", types:["침묵방관러","뒷담화달인"] },
+    { text:"어렵지만 일정 조율 가능한지 먼저 여쭤본다", types:[] },
+  ]},
+  { id:16, situation:"프로젝트 결과가 좋지 않아 팀 회고를 했다.", options:[
+    { text:"솔직하게 남의 문제점을 팩트로 지적한다", types:["팩폭직설러","권위압박러"] },
+    { text:"내 실수는 외부 상황 탓으로 돌린다", types:["책임회피러"] },
+    { text:"회고 내내 말 한마디 없이 듣기만 한다", types:["침묵방관러"] },
+    { text:"회고가 끝나고 나서야 복도에서 동료에게 털어놓는다", types:["뒷담화달인"] },
+  ]},
+  { id:17, situation:"점심 메뉴를 정하는데 의견이 갈렸다.", options:[
+    { text:"내가 먹고 싶은 걸 강하게 주장한다", types:["마이웨이러","팩폭직설러"] },
+    { text:"아무거나 괜찮다 하고 나중에 불만이다", types:["예스남발러","뒷담화달인"] },
+    { text:"다들 싫어한다는 걸 비꼬며 말한다", types:["비꼬기달인"] },
+    { text:"각자 선호를 물어보고 중간점을 찾는다", types:[] },
+  ]},
+  { id:18, situation:"단체 메일/공지에 오류가 있는 걸 발견했다.", options:[
+    { text:"즉시 전체 회신으로 오류를 지적한다. 알려줘야 하니까", types:["팩폭직설러"] },
+    { text:"발견했지만 굳이 내가 말할 필요 없다고 생각한다", types:["침묵방관러","읽씹장인"] },
+    { text:"담당자한테만 조용히 따로 알려준다", types:[] },
+    { text:"동료한테 '저거 틀린 거 맞지?' 하고 먼저 확인한다", types:["뒷담화달인","애매모호러"] },
+  ]},
+  { id:19, situation:"후배가 처음으로 맡은 업무에서 실수를 했다.", options:[
+    { text:"실수를 바로 지적하고 왜 틀렸는지 설명한다", types:["팩폭직설러","권위압박러"] },
+    { text:"표정으로 실망감을 드러내지만 말은 하지 않는다", types:["감정기복러","침묵방관러"] },
+    { text:"괜찮다고 하고, 나중에 다른 팀원에게 불만을 털어놓는다", types:["예스남발러","뒷담화달인"] },
+    { text:"어떤 부분이 어려웠는지 물어보고 함께 해결한다", types:[] },
+  ]},
+  { id:20, situation:"오늘 회의에서 결론이 흐지부지 끝났다.", options:[
+    { text:"그냥 내가 알아서 판단해서 진행한다", types:["마이웨이러"] },
+    { text:"회의 후 동료에게 '오늘 회의 이상하지 않았냐'고 한다", types:["뒷담화달인"] },
+    { text:"다음 회의 때 다시 물어봐야지 하고 그냥 둔다", types:["침묵방관러","읽씹장인"] },
+    { text:"바로 담당자에게 결론을 확인하는 메시지를 보낸다", types:[] },
   ]},
 ];
 
@@ -244,7 +249,40 @@ const V = {
     ]},
 };
 
+
+// ── 태그별 공통 배경색 ──
+const TAG_COLOR = {
+  "공격형":    { bg:"rgba(231,76,60,0.18)",  border:"rgba(231,76,60,0.5)",  label:"#ff7675" },
+  "회피형":    { bg:"rgba(39,174,96,0.18)",  border:"rgba(39,174,96,0.5)",  label:"#55efc4" },
+  "교란형":    { bg:"rgba(142,68,173,0.18)", border:"rgba(142,68,173,0.5)", label:"#c39bd3" },
+  "자기중심형": { bg:"rgba(41,128,185,0.18)", border:"rgba(41,128,185,0.5)", label:"#74b9ff" },
+};
+
 const VList = Object.keys(V);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 유형별 궁합
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const COMPAT = {
+  팩폭직설러:  { best:"침묵방관러", bestDesc:"직설러의 솔직함을 방관러가 차분히 받아줘요",         worst:"감정폭발러",  worstDesc:"둘 다 감정이 앞서면 회의실이 전쟁터가 돼요" },
+  비꼬기달인:  { best:"예스남발러", bestDesc:"비꼬는 말을 예스남발러는 그냥 웃고 넘겨요",          worst:"팩폭직설러",  worstDesc:"직설 vs 비꼬기, 서로 상처만 남아요" },
+  감정폭발러:  { best:"애매모호러", bestDesc:"모호한 반응이 오히려 폭발러를 진정시켜줘요",         worst:"권위압박러",  worstDesc:"두 강자의 충돌, 폭발 예정이에요" },
+  권위압박러:  { best:"예스남발러", bestDesc:"예스남발러는 압박러 말을 일단 다 받아줘요",          worst:"마이웨이러",  worstDesc:"내 방식 vs 내 경험, 평행선이에요" },
+  침묵방관러:  { best:"잡담폭격기", bestDesc:"폭격기가 침묵을 채워줘서 어색하지 않아요",           worst:"읽씹장인",    worstDesc:"둘 다 반응 없으면 협업이 멈춰요" },
+  읽씹장인:    { best:"말번복달인", bestDesc:"서로 대충 대충, 묘하게 잘 맞아요",                  worst:"침묵방관러",  worstDesc:"둘 다 반응 없으면 프로젝트가 멈춰요" },
+  책임회피러:  { best:"마이웨이러", bestDesc:"마이웨이러가 알아서 다 해주니 편해요",               worst:"팩폭직설러",  worstDesc:"직설러가 핑계를 용납하지 않아요" },
+  예스남발러:  { best:"부정대마왕", bestDesc:"NO맨이 예스맨의 무리한 수락을 걸러줘요",             worst:"말번복달인",  worstDesc:"둘 다 말이 바뀌면 아무것도 안 돼요" },
+  말번복달인:  { best:"애매모호러", bestDesc:"둘 다 모호해서 오히려 충돌이 없어요",                worst:"예스남발러",  worstDesc:"약속이 두 번 세 번 바뀌어요" },
+  감정기복러:  { best:"잡담폭격기", bestDesc:"폭격기가 분위기를 가볍게 만들어줘요",                worst:"권위압박러",  worstDesc:"눈치 보며 일하다 결국 폭발해요" },
+  애매모호러:  { best:"팩폭직설러", bestDesc:"직설러가 대신 명확하게 말해줘요",                   worst:"침묵방관러",  worstDesc:"둘 다 모호하면 아무도 방향을 모르게 돼요" },
+  뒷담화달인:  { best:"비꼬기달인", bestDesc:"둘이서 맞장구치며 스트레스를 해소해요",              worst:"팩폭직설러",  worstDesc:"직설러는 뒤에서 말하는 걸 용납하지 않아요" },
+  잡담폭격기:  { best:"침묵방관러", bestDesc:"방관러가 잘 들어줘서 폭격기가 신나요",               worst:"부정대마왕",  worstDesc:"신나게 얘기하다 NO 한 방에 분위기 끝이에요" },
+  부정대마왕:  { best:"예스남발러", bestDesc:"NO맨이 과한 수락을 현실적으로 걸러줘요",             worst:"잡담폭격기",  worstDesc:"신나는 분위기에 NO만 반복하면 혼자 아싸예요" },
+  마이웨이러:  { best:"책임회피러", bestDesc:"마이웨이러가 다 하니 회피러는 편해요",               worst:"권위압박러",  worstDesc:"내 방식 vs 내 경험, 평행선이에요" },
+  정보잠금러:  { best:"마이웨이러", bestDesc:"마이웨이러는 정보 없어도 혼자 해요",                 worst:"침묵방관러",  worstDesc:"정보도 없고 말도 없으면 팀이 무너져요" },
+};
+
+
 const DEPTS = ["발전부","기술부","대외협력팀"];
 
 function getResult(sc) {
@@ -259,6 +297,34 @@ function getResult(sc) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 메인 앱
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+}
+function wrapText(ctx, text, maxW, fontSize) {
+  const words = text.split("");
+  const lines = [];
+  let cur = "";
+  for (const ch of words) {
+    const test = cur + ch;
+    if (ctx.measureText(test).width > maxW && cur) {
+      lines.push(cur); cur = ch;
+    } else { cur = test; }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
 function App() {
   // steps: profile | quiz | result | browse | detail | adminLogin | admin
   const [step, setStep] = useState("profile");
@@ -281,6 +347,8 @@ function App() {
   // 비밀 진입 (하단 텍스트 5번 클릭)
   const tapCount = useRef(0);
   const tapTimer = useRef(null);
+  const resultRef = useRef(null);
+  const [saving, setSaving] = useState(false);
 
   const progress = (currentQ / questions.length) * 100;
 
@@ -339,6 +407,106 @@ function App() {
     }, 550);
   };
 
+
+  const handleSaveImage = () => {
+    if (!result || saving) return;
+    setSaving(true);
+    try {
+      const vData = V[result.top];
+      const W = 720, H = 960;
+      const canvas = document.createElement("canvas");
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext("2d");
+
+      // 배경
+      ctx.fillStyle = "#0d0b18";
+      ctx.fillRect(0, 0, W, H);
+
+      // 보라 그라데이션 상단
+      const grad = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, H*0.7);
+      grad.addColorStop(0, "rgba(88,28,135,0.55)");
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      // 카드 배경
+      ctx.fillStyle = "rgba(255,255,255,0.05)";
+      roundRect(ctx, 40, 40, W-80, H-80, 32);
+      ctx.fill();
+
+      // 상단 라벨
+      ctx.font = "bold 22px sans-serif";
+      ctx.fillStyle = "rgba(167,139,250,0.85)";
+      ctx.textAlign = "center";
+      ctx.fillText("나도 소통빌런일까?", W/2, 110);
+
+      // 이모지
+      ctx.font = "96px serif";
+      ctx.textAlign = "center";
+      ctx.fillText(vData.emoji, W/2, 250);
+
+      // 빌런 이름
+      ctx.font = "bold 52px sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.fillText(result.top, W/2, 320);
+
+      // 태그라인
+      ctx.font = "28px sans-serif";
+      ctx.fillStyle = vData.color + "cc";
+      ctx.fillText(vData.tagline, W/2, 370);
+
+      // 태그 배지
+      const tc = {"공격형":"rgba(231,76,60,0.35)","회피형":"rgba(39,174,96,0.35)","교란형":"rgba(142,68,173,0.35)","자기중심형":"rgba(41,128,185,0.35)"};
+      const tagW = 160, tagH = 44, tagX = W/2 - tagW/2, tagY = 390;
+      ctx.fillStyle = tc[vData.tag] || "rgba(255,255,255,0.15)";
+      roundRect(ctx, tagX, tagY, tagW, tagH, 22);
+      ctx.fill();
+      ctx.font = "bold 22px sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.fillText(vData.tag, W/2, tagY + 29);
+
+      // 구분선
+      ctx.strokeStyle = "rgba(255,255,255,0.1)";
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(80, 460); ctx.lineTo(W-80, 460); ctx.stroke();
+
+      // 설명
+      ctx.font = "24px sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,0.75)";
+      ctx.textAlign = "center";
+      const descLines = wrapText(ctx, vData.desc, W - 160, 24);
+      descLines.slice(0,4).forEach((line, i) => {
+        ctx.fillText(line, W/2, 500 + i * 38);
+      });
+
+      // 구분선2
+      ctx.beginPath(); ctx.moveTo(80, 680); ctx.lineTo(W-80, 680); ctx.stroke();
+
+      // 닉네임
+      ctx.font = "bold 26px sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,0.55)";
+      ctx.textAlign = "center";
+      const nameLabel = (profile.dept ? profile.dept + " · " : "") + (profile.nickname || "익명");
+      ctx.fillText(nameLabel, W/2, 730);
+
+      // 하단 워터마크
+      ctx.font = "22px sans-serif";
+      ctx.fillStyle = "rgba(167,139,250,0.5)";
+      ctx.fillText("소통하는 양양양수 만들기", W/2, 820);
+
+      // 저장
+      const link = document.createElement("a");
+      link.download = "소통빌런_" + result.top + "_" + (profile.nickname||"결과") + ".png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch(e) {
+      alert("이미지 저장 실패. 스크린샷을 이용해 주세요.");
+    }
+    setSaving(false);
+  };
+
   const openDetail=(name,from)=>{ setDetailName(name); setDetailFrom(from); setStep("detail"); };
   const closeDetail=()=>setStep(detailFrom==="browse"?"browse":"result");
 
@@ -361,10 +529,10 @@ function App() {
   if(step==="profile") return (
     <Wrap>
       <Card cls="anim">
-        <CB mb={4}><Lbl>소통 유형 자가진단</Lbl></CB>
+        <CB mb={4}><Lbl>소통하는 양양양수 만들기</Lbl></CB>
         <CB mb={18}>
           <div className="eb" style={{fontSize:50,marginBottom:8}}>🦹</div>
-          <h1 style={S.h1}>나도 소통빌런<br/>일까?</h1>
+          <h1 style={S.h1}>나도 소통빌런일까?</h1>
           <p style={S.sub}>16가지 소통빌런 유형 중<br/>내 안에 숨어있는 빌런을 찾아보세요</p>
         </CB>
 
@@ -407,7 +575,7 @@ function App() {
         </div>
 
         <StatRow>
-          <St n="12" l="질문 수"/><Dv/><St n="3분" l="소요 시간"/><Dv/><St n="16" l="빌런 유형"/>
+          <St n="20" l="질문 수"/><Dv/><St n="5분" l="소요 시간"/><Dv/><St n="16" l="빌런 유형"/>
         </StatRow>
 
         <CB>
@@ -464,10 +632,12 @@ function App() {
   // ── RESULT ──────────────────────────────
   if(step==="result"&&result){
     const v=V[result.top], sv=result.second?V[result.second]:null;
+    const compat=COMPAT[result.top];
     const others=VList.filter(n=>n!==result.top&&n!==result.second).slice(0,8);
     return (
       <Wrap>
         <Card cls="anim" scroll>
+          <div ref={resultRef}>
           <div style={S.userBadge}>
             <span>👤</span>
             <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"rgba(255,255,255,0.8)"}}>
@@ -482,11 +652,34 @@ function App() {
               <div className="eb" style={{fontSize:46,marginBottom:6}}>{v.emoji}</div>
               <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:24,color:"white"}}>{result.top}</div>
               <div style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:`${v.color}cc`,marginTop:4}}>{v.tagline}</div>
-              <span style={{...S.badge,background:`${v.color}44`,color:`${v.color}ee`,border:`1px solid ${v.color}55`,marginTop:8}}>{v.tag}</span>
+              <span style={{...S.badge,background:TAG_COLOR[v.tag]?.bg,color:TAG_COLOR[v.tag]?.label||v.color,border:`1px solid ${TAG_COLOR[v.tag]?.border||v.color}`,marginTop:8,fontWeight:600}}>{v.tag}</span>
             </div>
           </CB>
 
           <div style={S.descBox}><p style={S.descTxt}>{v.desc}</p></div>
+
+          {/* 유형별 궁합 */}
+          {compat&&(
+            <div style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:14,padding:"14px 16px",marginBottom:14}}>
+              <div style={{...S.sl,marginBottom:10}}>💞 유형별 궁합</div>
+              <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                <div style={{display:"flex",alignItems:"flex-start",gap:10,background:"rgba(46,213,115,0.08)",border:"1px solid rgba(46,213,115,0.25)",borderRadius:10,padding:"10px 12px"}}>
+                  <span style={{fontSize:22,flexShrink:0}}>💚</span>
+                  <div>
+                    <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"#2ed573",marginBottom:3}}>{V[compat.best]?.emoji} {compat.best} — 잘 맞아요</div>
+                    <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.55}}>{compat.bestDesc}</p>
+                  </div>
+                </div>
+                <div style={{display:"flex",alignItems:"flex-start",gap:10,background:"rgba(255,71,87,0.08)",border:"1px solid rgba(255,71,87,0.25)",borderRadius:10,padding:"10px 12px"}}>
+                  <span style={{fontSize:22,flexShrink:0}}>🔴</span>
+                  <div>
+                    <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"#ff4757",marginBottom:3}}>{V[compat.worst]?.emoji} {compat.worst} — 조심해요</div>
+                    <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.55}}>{compat.worstDesc}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div style={{marginBottom:16}}>
             <div style={{...S.sl,marginBottom:10}}>💡 구체적인 성장 팁</div>
@@ -502,6 +695,7 @@ function App() {
               ))}
             </div>
           </div>
+
 
           {sv&&result.second&&(
             <button className="sv-btn" onClick={()=>openDetail(result.second,"result")}>
@@ -528,6 +722,16 @@ function App() {
                 <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.45)"}}>전체 16종 →</span>
               </button>
             </div>
+          </div>
+
+          </div>{/* /resultRef */}
+
+          {/* 이미지 저장 버튼 */}
+          <div style={{marginBottom:12}}>
+            <button onClick={handleSaveImage} disabled={saving}
+              style={{width:"100%",background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:12,padding:"13px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:14,color:"rgba(255,255,255,0.85)",transition:"all .2s"}}>
+              {saving?"저장 중…":"📸 이미지로 저장하기"}
+            </button>
           </div>
 
           <CB style={{borderTop:"1px solid rgba(255,255,255,0.06)",paddingTop:14}}>
@@ -558,11 +762,11 @@ function App() {
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9}}>
             {filtered.map(name=>{const dv=V[name];return(
               <button key={name} className="dex" onClick={()=>openDetail(name,"browse")}
-                style={{background:`linear-gradient(135deg,${dv.color}22,rgba(0,0,0,0.25))`,borderColor:`${dv.color}44`}}>
+                style={{background:TAG_COLOR[dv.tag]?.bg||`rgba(0,0,0,0.25)`,border:`1.5px solid ${TAG_COLOR[dv.tag]?.border||dv.color+'44'}`}}>
                 <div style={{fontSize:28,marginBottom:4}}>{dv.emoji}</div>
                 <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:12.5,color:"white",lineHeight:1.3}}>{name}</div>
                 <div style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:10.5,color:"rgba(255,255,255,0.4)",marginTop:3,lineHeight:1.4}}>{dv.tagline}</div>
-                <span style={{...S.badge,background:`${dv.color}33`,color:`${dv.color}cc`,border:`1px solid ${dv.color}44`,marginTop:7,fontSize:10}}>{dv.tag}</span>
+                <span style={{...S.badge,background:TAG_COLOR[dv.tag]?.bg,color:TAG_COLOR[dv.tag]?.label||dv.color,border:`1px solid ${TAG_COLOR[dv.tag]?.border||dv.color}`,marginTop:7,fontSize:10,fontWeight:600}}>{dv.tag}</span>
               </button>
             );})}
           </div>
@@ -587,10 +791,34 @@ function App() {
               <div className="eb" style={{fontSize:44,marginBottom:6}}>{dv.emoji}</div>
               <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:22,color:"white"}}>{detailName}</div>
               <div style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:`${dv.color}bb`,marginTop:3}}>{dv.tagline}</div>
-              <span style={{...S.badge,background:`${dv.color}44`,color:`${dv.color}ee`,border:`1px solid ${dv.color}55`,marginTop:7}}>{dv.tag}</span>
+              <span style={{...S.badge,background:TAG_COLOR[dv.tag]?.bg,color:TAG_COLOR[dv.tag]?.label||dv.color,border:`1px solid ${TAG_COLOR[dv.tag]?.border||dv.color}`,marginTop:7,fontWeight:600}}>{dv.tag}</span>
             </div>
           </CB>
           <div style={S.descBox}><p style={S.descTxt}>{dv.desc}</p></div>
+
+          {/* 유형별 궁합 */}
+          {COMPAT[detailName]&&(
+            <div style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:14,padding:"14px 16px",marginBottom:14}}>
+              <div style={{...S.sl,marginBottom:10}}>💞 유형별 궁합</div>
+              <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                <div style={{display:"flex",alignItems:"flex-start",gap:10,background:"rgba(46,213,115,0.08)",border:"1px solid rgba(46,213,115,0.25)",borderRadius:10,padding:"10px 12px"}}>
+                  <span style={{fontSize:22,flexShrink:0}}>💚</span>
+                  <div>
+                    <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"#2ed573",marginBottom:3}}>{V[COMPAT[detailName].best]?.emoji} {COMPAT[detailName].best} — 잘 맞아요</div>
+                    <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.55}}>{COMPAT[detailName].bestDesc}</p>
+                  </div>
+                </div>
+                <div style={{display:"flex",alignItems:"flex-start",gap:10,background:"rgba(255,71,87,0.08)",border:"1px solid rgba(255,71,87,0.25)",borderRadius:10,padding:"10px 12px"}}>
+                  <span style={{fontSize:22,flexShrink:0}}>🔴</span>
+                  <div>
+                    <div style={{fontFamily:"'Black Han Sans',sans-serif",fontSize:13,color:"#ff4757",marginBottom:3}}>{V[COMPAT[detailName].worst]?.emoji} {COMPAT[detailName].worst} — 조심해요</div>
+                    <p style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.55}}>{COMPAT[detailName].worstDesc}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div style={{marginBottom:16}}>
             <div style={{...S.sl,marginBottom:10}}>💡 구체적인 성장 팁</div>
             <div style={{display:"flex",flexDirection:"column",gap:9}}>
@@ -610,7 +838,7 @@ function App() {
               <div style={{...S.sl,marginBottom:8}}>같은 {dv.tag} 빌런들</div>
               <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
                 {sameTag.map(name=>(
-                  <button key={name} className="chip" onClick={()=>setDetailName(name)} style={{borderColor:`${V[name].color}55`}}>
+                  <button key={name} className="chip" onClick={()=>setDetailName(name)} style={{background:TAG_COLOR[dv.tag]?.bg,borderColor:TAG_COLOR[dv.tag]?.border}}>
                     <span>{V[name].emoji}</span>
                     <span style={{fontFamily:"'Gowun Dodum',sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.75)"}}>{name}</span>
                   </button>
@@ -848,10 +1076,4 @@ input:focus,select:focus{border-color:rgba(167,139,250,0.6)!important;outline:no
 input::placeholder{color:rgba(255,255,255,0.22);}
 select option{background:#1a1730;color:white;}
 `;
-
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
-  </script>
-</body>
-</html>
+const root=ReactDOM.createRoot(document.getElementById("root"));root.render(<App />);</script></body></html>
