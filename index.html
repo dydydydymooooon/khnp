@@ -1,9 +1,12 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><title>나도 소통빌런일까? | 소통 유형 자가진단</title><script src="https://unpkg.com/react@18/umd/react.production.min.js"></script><script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><style>body{margin:0;background:#0B131E;font-family:Pretendard,-apple-system,sans-serif;}*{-webkit-tap-highlight-color:transparent;}</style></head><body><div id="root"></div><script>const window_storage={_key:function(k,s){return(s?"sh_":"lc_")+k;},get:async function(k,s){const v=localStorage.getItem(this._key(k,s));if(v===null)throw new Error("nf");return{key:k,value:v,shared:!!s};},set:async function(k,v,s){localStorage.setItem(this._key(k,s),v);return{key:k,value:v,shared:!!s};},delete:async function(k,s){localStorage.removeItem(this._key(k,s));return{key:k,deleted:true,shared:!!s};}};window.storage=window_storage;</script><script type="text/babel" data-presets="react">const{useState,useEffect,useRef}=React;
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><title>나도 소통빌런일까? | 소통 유형 자가진단</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="나도 소통빌런일까? | 소통 유형 자가진단">
+<meta property="og:description" content="16가지 소통빌런 유형 중 내 안에 숨어있는 업무 소통 부캐를 찾아보세요! 🌱">
+<meta property="og:image" content="https://khnpy.github.io/khnp/thumbnail.png"><script src="https://unpkg.com/react@18/umd/react.production.min.js"></script><script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><style>body{margin:0;background:#0B131E;font-family:Pretendard,-apple-system,sans-serif;}*{-webkit-tap-highlight-color:transparent;}</style></head><body><div id="root"></div><script>const window_storage={_key:function(k,s){return(s?"sh_":"lc_")+k;},get:async function(k,s){const v=localStorage.getItem(this._key(k,s));if(v===null)throw new Error("nf");return{key:k,value:v,shared:!!s};},set:async function(k,v,s){localStorage.setItem(this._key(k,s),v);return{key:k,value:v,shared:!!s};},delete:async function(k,s){localStorage.removeItem(this._key(k,s));return{key:k,deleted:true,shared:!!s};}};window.storage=window_storage;</script><script type="text/babel" data-presets="react">const{useState,useEffect,useRef}=React;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ⚙️  관리자 설정 — 비밀번호 여기서 변경
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const ADMIN_PW = "hansowon2025";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 질문 데이터
@@ -278,7 +281,7 @@ function wrapText(ctx, text, maxW, fontSize) {
 }
 
 function App() {
-  // steps: profile | quiz | result | browse | detail | adminLogin | admin
+  // steps: profile | quiz | result | browse | detail
   const [step, setStep] = useState("profile");
   const [profile, setProfile] = useState({ dept:"", nickname:"" });
   const [profileErr, setProfileErr] = useState("");
@@ -293,13 +296,7 @@ function App() {
   const [detailFrom, setDetailFrom] = useState("result");
   const [browseTag, setBrowseTag] = useState("전체");
   // 관리자
-  const [pwInput, setPwInput] = useState("");
-  const [pwErr, setPwErr] = useState("");
-  const [allRecords, setAllRecords] = useState([]);
-  const [adminFilter, setAdminFilter] = useState("전체");
   // 비밀 진입 (하단 텍스트 5번 클릭)
-  const tapCount = useRef(0);
-  const tapTimer = useRef(null);
   const resultRef = useRef(null);
   const [saving, setSaving] = useState(false);
 
@@ -323,21 +320,7 @@ function App() {
     } catch(e){ console.error(e); }
   };
 
-  const loadAllRecords = async () => {
-    try {
-      const r = await window.storage.get("vrecords", true);
-      setAllRecords(r ? JSON.parse(r.value) : []);
-    } catch { setAllRecords([]); }
-  };
-
   // ── 비밀 진입 탭 핸들러 ─────────────────
-  const handleSecretTap = () => {
-    tapCount.current += 1;
-    if(tapTimer.current) clearTimeout(tapTimer.current);
-    tapTimer.current = setTimeout(()=>{ tapCount.current=0; }, 2000);
-    if(tapCount.current >= 5){ tapCount.current=0; setStep("adminLogin"); }
-  };
-
   // ── 핸들러 ──────────────────────────────
   const handleProfileSubmit = () => {
     if(!profile.nickname.trim()){ setProfileErr("닉네임을 입력해 주세요!"); return; }
@@ -533,15 +516,7 @@ function App() {
     setProfile({dept:"",nickname:""});
   };
 
-  const handleAdminLogin=()=>{
-    if(pwInput===ADMIN_PW){ setPwErr(""); loadAllRecords(); setStep("admin"); setPwInput(""); }
-    else { setPwErr("비밀번호가 틀렸습니다."); }
-  };
 
-  const clearRecords = async () => {
-    if(!window.confirm("정말 모든 기록을 삭제할까요?")) return;
-    try { await window.storage.set("vrecords","[]",true); setAllRecords([]); } catch{}
-  };
 
   // ── PROFILE ─────────────────────────────
   if(step==="profile") return (
@@ -625,10 +600,6 @@ function App() {
         </CB>
 
         {/* 비밀 진입 버튼 — 눈에 안 띄게 */}
-        <p onClick={handleSecretTap}
-          style={{...S.micro, marginTop:14, cursor:"default", userSelect:"none"}}>
-          * 이 검사는 자기 성찰을 위한 가이드입니다
-        </p>
       </Card>
     </Wrap>
   );
@@ -900,138 +871,8 @@ function App() {
   }
 
   // ── 관리자 로그인 ────────────────────────
-  if(step==="adminLogin") return (
-    <Wrap>
-      <Card cls="anim">
-        <CB mb={16}>
-          <div style={{fontSize:40,marginBottom:10}}>🔑</div>
-          <div style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:20,color:"white",marginBottom:6}}>관리자 모드</div>
-          <p style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:13,color:"rgba(255,255,255,0.45)"}}>비밀번호를 입력하세요</p>
-        </CB>
-        <div style={{marginBottom:16}}>
-          <input type="password"
-            style={{...S.inp, textAlign:"center", fontSize:18, letterSpacing:"0.2em",
-              borderColor:pwErr?"rgba(244,114,182,0.6)":"rgba(255,255,255,0.12)"}}
-            placeholder="••••••••"
-            value={pwInput}
-            onChange={e=>{setPwInput(e.target.value);setPwErr("");}}
-            onKeyDown={e=>e.key==="Enter"&&handleAdminLogin()} />
-          {pwErr&&<div style={{textAlign:"center",fontSize:12,color:"#f472b6",marginTop:6,fontFamily:"'Pretendard',-apple-system,sans-serif"}}>⚠️ {pwErr}</div>}
-        </div>
-        <CB style={{gap:10,display:"flex",flexDirection:"column",alignItems:"center"}}>
-          <button className="btn-p" onClick={handleAdminLogin}>입장하기</button>
-          <button className="btn-g" style={{marginTop:4}} onClick={()=>setStep("profile")}>돌아가기</button>
-        </CB>
-      </Card>
-    </Wrap>
-  );
 
   // ── 관리자 패널 ──────────────────────────
-  if(step==="admin"){
-    const deptTabs=["전체",...DEPTS];
-    const filtered=adminFilter==="전체"?allRecords:allRecords.filter(r=>r.dept===adminFilter);
-
-    // 통계
-    const countByVillain={};
-    const countByDept={};
-    allRecords.forEach(r=>{
-      countByVillain[r.villain]=(countByVillain[r.villain]||0)+1;
-      if(r.dept) countByDept[r.dept]=(countByDept[r.dept]||0)+1;
-    });
-    const topVillains=Object.entries(countByVillain).sort((a,b)=>b[1]-a[1]).slice(0,5);
-
-    return (
-      <Wrap>
-        <div style={{width:"100%",maxWidth:520,position:"relative",zIndex:1}}>
-          {/* 헤더 */}
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
-            <div style={{display:"flex",alignItems:"center",gap:10}}>
-              <span style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:18,color:"white"}}>🔑 관리자 패널</span>
-              <span style={{...S.badge,background:"rgba(167,139,250,0.2)",color:"rgba(59,130,246,1)",border:"1px solid rgba(167,139,250,0.3)"}}>총 {allRecords.length}건</span>
-            </div>
-            <button className="back" onClick={()=>setStep("profile")}>나가기</button>
-          </div>
-
-          {/* 통계 카드 */}
-          <div style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:16,padding:"16px",marginBottom:12}}>
-            <div style={{...S.sl,marginBottom:10}}>📊 빌런 유형 TOP 5</div>
-            <div style={{display:"flex",flexDirection:"column",gap:7}}>
-              {topVillains.map(([name,cnt],i)=>(
-                <div key={name} style={{display:"flex",alignItems:"center",gap:10}}>
-                  <span style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:13,color:"rgba(255,255,255,0.35)",width:18}}>{i+1}</span>
-                  <span style={{fontSize:18}}>{V[name]?.emoji}</span>
-                  <span style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:13,color:"white",flex:1}}>{name}</span>
-                  <div style={{display:"flex",alignItems:"center",gap:6}}>
-                    <div style={{height:6,width:`${Math.round((cnt/allRecords.length)*80)+8}px`,background:`${V[name]?.color||"#888"}88`,borderRadius:99}}/>
-                    <span style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:13,color:`${V[name]?.color||"#888"}dd`}}>{cnt}명</span>
-                  </div>
-                </div>
-              ))}
-              {topVillains.length===0&&<p style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:13,color:"rgba(255,255,255,0.35)"}}>아직 참여 기록이 없어요</p>}
-            </div>
-
-            {/* 부서별 */}
-            {Object.keys(countByDept).length>0&&(
-              <div style={{borderTop:"1px solid rgba(255,255,255,0.07)",marginTop:12,paddingTop:12}}>
-                <div style={{...S.sl,marginBottom:8}}>🏢 부서별 참여</div>
-                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                  {Object.entries(countByDept).map(([d,c])=>(
-                    <div key={d} style={{background:"rgba(255,255,255,0.06)",borderRadius:99,padding:"4px 12px",fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:12,color:"rgba(255,255,255,0.7)"}}>
-                      {d} <b style={{color:"white"}}>{c}</b>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* 필터 탭 */}
-          <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:10}}>
-            {deptTabs.map(t=>(
-              <button key={t} className={`tb${adminFilter===t?" on":""}`} onClick={()=>setAdminFilter(t)}>{t}</button>
-            ))}
-          </div>
-
-          {/* 기록 리스트 */}
-          <div style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:16,padding:"14px",maxHeight:"45vh",overflowY:"auto",marginBottom:10}}>
-            {filtered.length===0
-              ? <p style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:13,color:"rgba(255,255,255,0.35)",textAlign:"center",padding:"20px 0"}}>기록이 없어요</p>
-              : <div style={{display:"flex",flexDirection:"column",gap:7}}>
-                  {filtered.map((r,i)=>(
-                    <div key={i} style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"9px 12px",display:"flex",alignItems:"center",gap:10}}>
-                      <span style={{fontSize:20}}>{r.emoji}</span>
-                      <div style={{flex:1,minWidth:0}}>
-                        <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                          <span style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:13,color:"white"}}>{r.nickname}</span>
-                          {r.dept&&<span style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:11,color:"rgba(255,255,255,0.38)"}}>({r.dept})</span>}
-                        </div>
-                        <div style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:11.5,color:"rgba(255,255,255,0.5)",marginTop:2}}>
-                          {r.villain}
-                          <span style={{...S.badge,background:`${V[r.villain]?.color||"#888"}22`,color:`${V[r.villain]?.color||"#888"}bb`,border:"none",marginLeft:6,padding:"1px 7px",fontSize:10}}>{r.tag}</span>
-                        </div>
-                      </div>
-                      <div style={{fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:10.5,color:"rgba(255,255,255,0.28)",textAlign:"right",flexShrink:0}}>
-                        {r.date}<br/>{r.time}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-            }
-          </div>
-
-          {/* 하단 버튼 */}
-          <div style={{display:"flex",gap:8,justifyContent:"flex-end"}}>
-            <button className="btn-g" onClick={loadAllRecords}>새로고침 🔄</button>
-            <button onClick={clearRecords}
-              style={{background:"rgba(231,76,60,0.12)",border:"1px solid rgba(231,76,60,0.3)",borderRadius:11,padding:"10px 16px",color:"rgba(231,76,60,0.8)",fontFamily:"'Pretendard',-apple-system,sans-serif",fontSize:13,cursor:"pointer"}}>
-              전체 삭제 🗑️
-            </button>
-          </div>
-        </div>
-      </Wrap>
-    );
-  }
-
   return null;
 }
 
