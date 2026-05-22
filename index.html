@@ -33,101 +33,53 @@ const questions = [
     { text:"어떤 부분이 문제인지 구체적으로 다시 여쭤본다", types:[] },
     { text:"내 방식이 맞으니 그냥 내 방식대로 다시 낸다", types:["마이웨이러","권위압박러"] },
   ]},
-  { id:5, situation:"회의에서 '의견 있으신 분?' 하고 물었다.", options:[
-    { text:"할 말이 있지만… 괜히 말했다가 일 생길까봐 패스", types:["침묵방관러"] },
-    { text:"바로 손들고 전달. 근데 말이 좀 세게 나옴", types:["팩폭직설러"] },
-    { text:"생각했던 얘기 대신 다른 잡담이 먼저 나온다", types:["잡담폭격기"] },
-    { text:"일단 '네, 좋습니다!'하고 다 동의한다", types:["예스남발러"] },
-  ]},
-  { id:6, situation:"프로젝트 방향이 중간에 갑자기 바뀌었다.", options:[
+  { id:5, situation:"프로젝트 방향이 중간에 갑자기 바뀌었다.", options:[
     { text:"어제 분명 이렇게 하라고 했잖아요! 왜 바꿔요?", types:["감정폭발러"] },
     { text:"말은 안 하고 속으로만 부글부글", types:["침묵방관러","감정기복러"] },
     { text:"그럼 이 방향으로! (어차피 또 바뀔 것 같은데)", types:["말번복달인","예스남발러"] },
     { text:"어차피 내 파트는 내가 알아서. 원래 방식 유지", types:["마이웨이러"] },
   ]},
-  { id:7, situation:"동료 A가 자리를 비웠을 때, 그 사람 실수 얘기가 나왔다.", options:[
+  { id:6, situation:"동료 A가 자리를 비웠을 때, 그 사람 실수 얘기가 나왔다.", options:[
     { text:"이참에 평소 답답했던 점도 살짝 얘기한다", types:["뒷담화달인"] },
     { text:"표정으로만 공감하고 말은 아낀다", types:["침묵방관러"] },
     { text:"그 자리에서 A 편을 들어준다", types:[] },
     { text:"웃으면서 '아, 그 사람 원래 그래요~' 하고 거든다", types:["비꼬기달인","뒷담화달인"] },
   ]},
-  { id:8, situation:"업무 지시를 받았는데 내용이 좀 모호하다.", options:[
+  { id:7, situation:"업무 지시를 받았는데 내용이 좀 모호하다.", options:[
     { text:"일단 알겠다고 하고, 내 방식대로 해서 낸다", types:["마이웨이러","예스남발러"] },
     { text:"구체적으로 어떤 방향인지 재차 물어본다", types:[] },
     { text:"완벽히 이해될 때까지 기다리다가 결국 늦게 시작", types:["읽씹장인","침묵방관러"] },
     { text:"이 방향도 맞고, 저 방향도 맞고… 이랬다저랬다", types:["말번복달인","애매모호러"] },
   ]},
-  { id:9, situation:"새로운 업무 방식 도입을 팀에서 논의 중이다.", options:[
-    { text:"그게 될까요? 전에도 해봤는데 효과 없었어요", types:["부정대마왕"] },
-    { text:"좋아요! (근데 왜 바꾸지, 지금도 잘 되는데)", types:["예스남발러","마이웨이러"] },
-    { text:"뭐가 달라지는 건지 조금 더 설명해 달라고 한다", types:[] },
-    { text:"아직 검토 중이라 말하기 어렵다며 얼버무린다", types:["정보잠금러","애매모호러"] },
-  ]},
-  { id:10, situation:"오늘 아침 사소한 일로 기분이 상했다.", options:[
+  { id:8, situation:"오늘 아침 사소한 일로 기분이 상했다.", options:[
     { text:"별 거 아닌 후배 실수에도 말투가 차가워진다", types:["감정기복러","감정폭발러"] },
     { text:"아무렇지 않은 척하지만 메시지 답장이 늦어진다", types:["읽씹장인","감정기복러"] },
     { text:"점심 때 동료한테 하소연한다", types:["뒷담화달인"] },
     { text:"기분을 추스르고 평소대로 일에 집중한다", types:[] },
   ]},
-  { id:11, situation:"중요한 프로젝트 정보를 나만 먼저 알게 됐다.", options:[
+  { id:9, situation:"중요한 프로젝트 정보를 나만 먼저 알게 됐다.", options:[
     { text:"정리되면 공유해야지… (그러다 사고 터진 뒤에야 알림)", types:["정보잠금러"] },
     { text:"팀원들이 불안해할까봐 내가 알아서 처리하겠다고 함", types:["정보잠금러","마이웨이러"] },
     { text:"바로 팀 단톡방에 공유한다", types:[] },
     { text:"모호하게 '잘 되고 있다'고만 답한다", types:["애매모호러"] },
   ]},
-  { id:12, situation:"회의가 시작됐는데 갑자기 지난 주말 얘기가 생각났다.", options:[
+  { id:10, situation:"회의가 시작됐는데 갑자기 지난 주말 얘기가 생각났다.", options:[
     { text:"분위기 풀어준다며 주말 얘기를 꺼낸다", types:["잡담폭격기"] },
     { text:"회의 끝나고 점심 때 얘기하기로 한다", types:[] },
     { text:"얘기하다가 어느새 30분이 지나 있다", types:["잡담폭격기"] },
     { text:"잡담은 별로 안 좋아해서 바로 안건으로 돌린다", types:[] },
   ]},
-  { id:13, situation:"팀원이 내 업무 방식에 대해 개선을 제안했다.", options:[
-    { text:"내가 해봐서 아는데 그건 별로야, 지금 방식이 맞아", types:["권위압박러","마이웨이러"] },
-    { text:"칭찬하는 척하며 '그것도 나쁘지 않네~'라고 넘긴다", types:["비꼬기달인"] },
-    { text:"일단 알겠다고만 하고 실제로는 안 바꾼다", types:["예스남발러"] },
-    { text:"좋은 제안이면 적극 검토해본다", types:[] },
-  ]},
-  { id:14, situation:"갑작스럽게 마감 일정이 당겨졌다.", options:[
-    { text:"화가 나서 바로 불만을 표출한다", types:["감정폭발러"] },
-    { text:"알겠다고 했지만 결국 못 맞출 것 같다", types:["예스남발러","말번복달인"] },
-    { text:"조용히 수긍하지만 속으로 부글부글", types:["침묵방관러","감정기복러"] },
-    { text:"일정 조정이 필요한 이유를 차분히 설명한다", types:[] },
-  ]},
-  { id:15, situation:"상사가 무리한 요청을 했다.", options:[
+  { id:11, situation:"상사가 무리한 요청을 했다.", options:[
     { text:"일단 네! 하고 나중에 못한 이유를 댄다", types:["예스남발러","책임회피러"] },
     { text:"불가능한 이유를 다소 강하게 직접 말한다", types:["팩폭직설러"] },
     { text:"조용히 수긍하지만 뒤에서 동료에게 토로한다", types:["침묵방관러","뒷담화달인"] },
     { text:"어렵지만 일정 조율 가능한지 먼저 여쭤본다", types:[] },
   ]},
-  { id:16, situation:"프로젝트 결과가 좋지 않아 팀 회고를 했다.", options:[
-    { text:"솔직하게 남의 문제점을 팩트로 지적한다", types:["팩폭직설러","권위압박러"] },
-    { text:"내 실수는 외부 상황 탓으로 돌린다", types:["책임회피러"] },
-    { text:"회고 내내 말 한마디 없이 듣기만 한다", types:["침묵방관러"] },
-    { text:"회고가 끝나고 나서야 복도에서 동료에게 털어놓는다", types:["뒷담화달인"] },
-  ]},
-  { id:17, situation:"점심 메뉴를 정하는데 의견이 갈렸다.", options:[
-    { text:"내가 먹고 싶은 걸 강하게 주장한다", types:["마이웨이러","팩폭직설러"] },
-    { text:"아무거나 괜찮다 하고 나중에 불만이다", types:["예스남발러","뒷담화달인"] },
-    { text:"다들 싫어한다는 걸 비꼬며 말한다", types:["비꼬기달인"] },
-    { text:"각자 선호를 물어보고 중간점을 찾는다", types:[] },
-  ]},
-  { id:18, situation:"단체 메일/공지에 오류가 있는 걸 발견했다.", options:[
-    { text:"즉시 전체 회신으로 오류를 지적한다. 알려줘야 하니까", types:["팩폭직설러"] },
-    { text:"발견했지만 굳이 내가 말할 필요 없다고 생각한다", types:["침묵방관러","읽씹장인"] },
-    { text:"담당자한테만 조용히 따로 알려준다", types:[] },
-    { text:"동료한테 '저거 틀린 거 맞지?' 하고 먼저 확인한다", types:["뒷담화달인","애매모호러"] },
-  ]},
-  { id:19, situation:"후배가 처음으로 맡은 업무에서 실수를 했다.", options:[
+  { id:12, situation:"후배가 처음으로 맡은 업무에서 실수를 했다.", options:[
     { text:"실수를 바로 지적하고 왜 틀렸는지 설명한다", types:["팩폭직설러","권위압박러"] },
     { text:"표정으로 실망감을 드러내지만 말은 하지 않는다", types:["감정기복러","침묵방관러"] },
     { text:"괜찮다고 하고, 나중에 다른 팀원에게 불만을 털어놓는다", types:["예스남발러","뒷담화달인"] },
-    { text:"어떤 부분이 어려웠는지 물어보고 함께 해결한다", types:[] },
-  ]},
-  { id:20, situation:"오늘 회의에서 결론이 흐지부지 끝났다.", options:[
-    { text:"그냥 내가 알아서 판단해서 진행한다", types:["마이웨이러"] },
-    { text:"회의 후 동료에게 '오늘 회의 이상하지 않았냐'고 한다", types:["뒷담화달인"] },
-    { text:"다음 회의 때 다시 물어봐야지 하고 그냥 둔다", types:["침묵방관러","읽씹장인"] },
-    { text:"바로 담당자에게 결론을 확인하는 메시지를 보낸다", types:[] },
+    { text:"어렵지 않게 함께 해결 방법을 찾아본다", types:[] },
   ]},
 ];
 
@@ -507,6 +459,37 @@ function App() {
     setSaving(false);
   };
 
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    const text = `나는 소통빌런 [${result?.top}]!\n"${V[result?.top]?.tagline}"\n\n내 유형을 확인해보세요 👇\n${url}`;
+    if (navigator.share) {
+      try { await navigator.share({ title:"나도 소통빌런일까?", text }); } catch(e) {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("결과가 클립보드에 복사됐어요! 붙여넣기 해서 공유해보세요 😊");
+      } catch(e) { alert("공유를 지원하지 않는 브라우저예요."); }
+    }
+  };
+
+  const handleCopyLink = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      alert("링크가 복사됐어요! 🔗");
+    } catch(e) {
+      // fallback
+      const el = document.createElement("textarea");
+      el.value = url;
+      document.body.appendChild(el);
+      el.select();
+      try { document.execCommand("copy"); alert("링크가 복사됐어요! 🔗"); }
+      catch(e2) { alert("복사 실패. 주소창에서 직접 복사해 주세요."); }
+      document.body.removeChild(el);
+    }
+  };
+
   const openDetail=(name,from)=>{ setDetailName(name); setDetailFrom(from); setStep("detail"); };
   const closeDetail=()=>setStep(detailFrom==="browse"?"browse":"result");
 
@@ -575,7 +558,7 @@ function App() {
         </div>
 
         <StatRow>
-          <St n="20" l="질문 수"/><Dv/><St n="5분" l="소요 시간"/><Dv/><St n="16" l="빌런 유형"/>
+          <St n="12" l="질문 수"/><Dv/><St n="3분" l="소요 시간"/><Dv/><St n="16" l="빌런 유형"/>
         </StatRow>
 
         <CB>
@@ -726,11 +709,19 @@ function App() {
 
           </div>{/* /resultRef */}
 
-          {/* 이미지 저장 버튼 */}
-          <div style={{marginBottom:12}}>
+          {/* 공유/저장 버튼 3종 */}
+          <div style={{display:"flex",gap:8,marginBottom:12}}>
+            <button onClick={handleShare}
+              style={{flex:1,background:"linear-gradient(135deg,rgba(167,139,250,0.25),rgba(244,114,182,0.25))",border:"1px solid rgba(167,139,250,0.4)",borderRadius:12,padding:"13px 8px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"white",transition:"all .2s"}}>
+              📤 결과 공유
+            </button>
+            <button onClick={handleCopyLink}
+              style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:12,padding:"13px 8px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"rgba(255,255,255,0.8)",transition:"all .2s"}}>
+              🔗 링크 복사
+            </button>
             <button onClick={handleSaveImage} disabled={saving}
-              style={{width:"100%",background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:12,padding:"13px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:14,color:"rgba(255,255,255,0.85)",transition:"all .2s"}}>
-              {saving?"저장 중…":"📸 이미지로 저장하기"}
+              style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:12,padding:"13px 8px",cursor:"pointer",fontFamily:"'Gowun Dodum',sans-serif",fontSize:13,color:"rgba(255,255,255,0.8)",transition:"all .2s"}}>
+              {saving?"저장중…":"📸 이미지 저장"}
             </button>
           </div>
 
