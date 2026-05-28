@@ -467,11 +467,23 @@ function App() {
       ctx.fillStyle = "rgba(167,139,250,0.5)";
       ctx.fillText("소통하는 양양양수 만들기", W/2, 820);
 
-      // 저장
-      const link = document.createElement("a");
-      link.download = "소통빌런_" + result.top + "_" + (profile.nickname||"결과") + ".png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+      // 저장 — iOS 대응
+      const dataUrl = canvas.toDataURL("image/png");
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      if (isIOS) {
+        const win = window.open("", "_blank");
+        if (win) {
+          win.document.write('<html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#0B131E;display:flex;flex-direction:column;align-items:center;padding:20px"><img src="' + dataUrl + '" style="max-width:100%;border-radius:16px"/><p style="color:white;text-align:center;padding:16px;font-family:sans-serif;font-size:15px">📸 이미지를 길게 눌러서 저장하세요!</p></body></html>');
+          win.document.close();
+        } else {
+          alert("팝업이 차단됐어요. 팝업 허용 후 다시 시도해 주세요.");
+        }
+      } else {
+        const link = document.createElement("a");
+        link.download = "소통빌런_" + result.top + "_" + (profile.nickname||"결과") + ".png";
+        link.href = dataUrl;
+        link.click();
+      }
     } catch(e) {
       alert("이미지 저장 실패. 스크린샷을 이용해 주세요.");
     }
