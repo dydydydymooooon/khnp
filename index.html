@@ -280,12 +280,14 @@ function wrapText(ctx, text, maxW, fontSize) {
   return lines;
 }
 
+// URL 파라미터 초기값
+const _initVillain = (()=>{ try { const p=new URLSearchParams(window.location.search).get('result'); return p&&V[p]?p:null; } catch(e){return null;} })();
+const _initStep = _initVillain ? 'sharedResult' : 'profile';
+
 function App() {
   // steps: profile | quiz | result | browse | detail
-  const urlParams = new URLSearchParams(window.location.search);
-  const sharedResult = urlParams.get("result");
-  const [step, setStep] = useState(sharedResult && V[sharedResult] ? "sharedResult" : "profile");
-  const [sharedVillain] = useState(sharedResult && V[sharedResult] ? sharedResult : null);
+  const [step, setStep] = useState(_initStep);
+  const [sharedVillain] = useState(_initVillain);
   const [profile, setProfile] = useState({ dept:"", nickname:"" });
   const [profileErr, setProfileErr] = useState("");
   const [deptMode, setDeptMode] = useState("select"); // "select" | "custom"
