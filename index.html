@@ -378,7 +378,7 @@ function App() {
     setSaving(true);
     try {
       const vData = V[result.top];
-      const W = 720, H = 1500;
+      const W = 720, H = 1200;
       const canvas = document.createElement("canvas");
       canvas.width = W; canvas.height = H;
       const ctx = canvas.getContext("2d");
@@ -460,15 +460,10 @@ function App() {
       ctx.fillText("💡 성장 팁", W/2, cy); cy += 44;
 
       vData.tips.forEach((t) => {
-        ctx.font = "bold 21px sans-serif";
+        ctx.font = "bold 22px sans-serif";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "left";
-        ctx.fillText(t.icon + " " + t.title, 80, cy); cy += 30;
-        ctx.font = "18px sans-serif";
-        ctx.fillStyle = "rgba(255,255,255,0.58)";
-        const tl = wrapText(ctx, t.body.split("\n")[0].replace(/→ /g,""), W-170, 18);
-        tl.slice(0,1).forEach(line => { ctx.fillText(line, 80, cy); cy += 26; });
-        cy += 12;
+        ctx.fillText(t.icon + " " + t.title, 80, cy); cy += 38;
       });
 
       ctx.strokeStyle = "rgba(255,255,255,0.1)"; ctx.lineWidth = 1;
