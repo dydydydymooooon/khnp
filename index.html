@@ -384,7 +384,6 @@ function App() {
     setSaving(true);
     try {
       const vData = V[result.top];
-      const compat = COMPAT[result.top];
       const W = 720, H = 1480;
       const canvas = document.createElement("canvas");
       canvas.width = W; canvas.height = H;
@@ -394,9 +393,9 @@ function App() {
       ctx.fillStyle = "#0B131E";
       ctx.fillRect(0, 0, W, H);
 
-      // 그라데이션
-      const grad = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, H*0.5);
-      grad.addColorStop(0, "rgba(16,185,129,0.35)");
+      // 보라 그라데이션 상단
+      const grad = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, H*0.7);
+      grad.addColorStop(0, "rgba(16,185,129,0.4)");
       grad.addColorStop(1, "rgba(59,130,246,0)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
@@ -408,124 +407,137 @@ function App() {
 
       // 상단 라벨
       ctx.font = "bold 22px sans-serif";
-      ctx.fillStyle = "rgba(16,185,129,0.9)";
+      ctx.fillStyle = "rgba(167,139,250,0.85)";
       ctx.textAlign = "center";
-      ctx.fillText("나도 소통빌런일까?", W/2, 105);
+      ctx.fillText("나도 소통빌런일까?", W/2, 110);
 
       // 이모지
       ctx.font = "96px serif";
-      ctx.fillText(vData.emoji, W/2, 230);
+      ctx.textAlign = "center";
+      ctx.fillText(vData.emoji, W/2, 250);
 
       // 빌런 이름
       ctx.font = "bold 52px sans-serif";
       ctx.fillStyle = "#ffffff";
-      ctx.fillText(result.top, W/2, 300);
+      ctx.textAlign = "center";
+      ctx.fillText(result.top, W/2, 320);
 
       // 태그라인
       ctx.font = "28px sans-serif";
       ctx.fillStyle = vData.color + "cc";
-      ctx.fillText(vData.tagline, W/2, 348);
+      ctx.fillText(vData.tagline, W/2, 370);
 
       // 태그 배지
-      const tc = {"공격형":"rgba(231,76,60,0.4)","회피형":"rgba(39,174,96,0.4)","교란형":"rgba(142,68,173,0.4)","자기중심형":"rgba(41,128,185,0.4)"};
-      const tagW = 180, tagH = 44, tagX = W/2 - tagW/2, tagY = 368;
+      const tc = {"공격형":"rgba(231,76,60,0.35)","회피형":"rgba(39,174,96,0.35)","교란형":"rgba(142,68,173,0.35)","자기중심형":"rgba(41,128,185,0.35)"};
+      const tagW = 160, tagH = 44, tagX = W/2 - tagW/2, tagY = 390;
       ctx.fillStyle = tc[vData.tag] || "rgba(255,255,255,0.15)";
       roundRect(ctx, tagX, tagY, tagW, tagH, 22);
       ctx.fill();
       ctx.font = "bold 22px sans-serif";
       ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
       ctx.fillText(vData.tag, W/2, tagY + 29);
 
       // 구분선
-      const div = (y) => { ctx.strokeStyle="rgba(255,255,255,0.1)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(80,y); ctx.lineTo(W-80,y); ctx.stroke(); };
-      div(432);
+      ctx.strokeStyle = "rgba(255,255,255,0.1)";
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(80, 460); ctx.lineTo(W-80, 460); ctx.stroke();
 
       // 설명
-      ctx.font = "23px sans-serif";
+      ctx.font = "24px sans-serif";
       ctx.fillStyle = "rgba(255,255,255,0.75)";
-      const descLines = wrapText(ctx, vData.desc, W-160, 23);
-      descLines.slice(0,3).forEach((line,i) => ctx.fillText(line, W/2, 470 + i*36));
-
-      let y = 470 + Math.min(descLines.length,3)*36 + 30;
-      div(y); y += 44;
-
-      // 💡 성장 팁
-      ctx.font = "bold 26px sans-serif";
-      ctx.fillStyle = "rgba(16,185,129,0.95)";
-      ctx.fillText("💡 성장 팁", W/2, y); y += 40;
-
-      vData.tips.forEach((t) => {
-        ctx.font = "bold 22px sans-serif";
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = "left";
-        ctx.fillText(t.icon + " " + t.title, 80, y); y += 30;
-        ctx.font = "19px sans-serif";
-        ctx.fillStyle = "rgba(255,255,255,0.6)";
-        const tLines = wrapText(ctx, t.body.split("
-")[0].replace(/→ /g,""), W-170, 19);
-        tLines.slice(0,1).forEach(line => { ctx.fillText(line, 80, y); y += 28; });
-        y += 14;
+      ctx.textAlign = "center";
+      const descLines = wrapText(ctx, vData.desc, W - 160, 24);
+      descLines.slice(0,4).forEach((line, i) => {
+        ctx.fillText(line, W/2, 500 + i * 38);
       });
 
+      // 구분선2
+      ctx.beginPath(); ctx.moveTo(80, 680); ctx.lineTo(W-80, 680); ctx.stroke();
+
+      // 💡 성장 팁
+      let cy = 720;
+      ctx.font = "bold 26px sans-serif";
+      ctx.fillStyle = "rgba(16,185,129,0.95)";
       ctx.textAlign = "center";
-      div(y); y += 44;
+      ctx.fillText("💡 성장 팁", W/2, cy); cy += 42;
+
+      vData.tips.forEach((t) => {
+        ctx.font = "bold 21px sans-serif";
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "left";
+        ctx.fillText(t.icon + " " + t.title, 80, cy); cy += 28;
+        ctx.font = "18px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.58)";
+        const tl = wrapText(ctx, t.body.split("\n")[0].replace(/→ /g,""), W-170, 18);
+        tl.slice(0,1).forEach(line => { ctx.fillText(line, 80, cy); cy += 26; });
+        cy += 10;
+      });
+
+      // 구분선3
+      ctx.strokeStyle = "rgba(255,255,255,0.1)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(80, cy+10); ctx.lineTo(W-80, cy+10); ctx.stroke();
+      cy += 50;
 
       // 💞 궁합
+      const compat = COMPAT[result.top];
       if(compat) {
         ctx.font = "bold 26px sans-serif";
         ctx.fillStyle = "rgba(16,185,129,0.95)";
-        ctx.fillText("💞 유형별 궁합", W/2, y); y += 42;
+        ctx.textAlign = "center";
+        ctx.fillText("💞 유형별 궁합", W/2, cy); cy += 42;
 
         // 잘 맞아요
-        ctx.fillStyle = "rgba(46,213,115,0.15)";
-        roundRect(ctx, 80, y, W-160, 80, 14); ctx.fill();
-        ctx.font = "bold 22px sans-serif";
+        ctx.fillStyle = "rgba(46,213,115,0.12)";
+        roundRect(ctx, 80, cy, W-160, 78, 12); ctx.fill();
+        ctx.font = "bold 21px sans-serif";
         ctx.fillStyle = "#2ed573";
         ctx.textAlign = "left";
-        const bv = V[compat.best];
-        ctx.fillText((bv?.emoji||"") + " " + compat.best + " — 잘 맞아요 💚", 104, y+30);
-        ctx.font = "19px sans-serif";
-        ctx.fillStyle = "rgba(255,255,255,0.65)";
-        ctx.fillText(compat.bestDesc, 104, y+56);
-        y += 100;
+        ctx.fillText((V[compat.best]?.emoji||"") + " " + compat.best + " — 잘 맞아요 💚", 104, cy+28);
+        ctx.font = "18px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.6)";
+        ctx.fillText(compat.bestDesc, 104, cy+54);
+        cy += 96;
 
         // 조심해요
-        ctx.fillStyle = "rgba(255,71,87,0.15)";
-        roundRect(ctx, 80, y, W-160, 80, 14); ctx.fill();
-        ctx.font = "bold 22px sans-serif";
+        ctx.fillStyle = "rgba(255,71,87,0.12)";
+        roundRect(ctx, 80, cy, W-160, 78, 12); ctx.fill();
+        ctx.font = "bold 21px sans-serif";
         ctx.fillStyle = "#ff4757";
-        ctx.fillText((V[compat.worst]?.emoji||"") + " " + compat.worst + " — 조심해요 🔴", 104, y+30);
-        ctx.font = "19px sans-serif";
-        ctx.fillStyle = "rgba(255,255,255,0.65)";
-        ctx.fillText(compat.worstDesc, 104, y+56);
-        y += 110;
+        ctx.textAlign = "left";
+        ctx.fillText((V[compat.worst]?.emoji||"") + " " + compat.worst + " — 조심해요 🔴", 104, cy+28);
+        ctx.font = "18px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.6)";
+        ctx.fillText(compat.worstDesc, 104, cy+54);
+        cy += 106;
       }
 
-      ctx.textAlign = "center";
-      div(y); y += 44;
+      // 구분선4
+      ctx.strokeStyle = "rgba(255,255,255,0.1)";
+      ctx.beginPath(); ctx.moveTo(80, cy); ctx.lineTo(W-80, cy); ctx.stroke();
+      cy += 40;
 
       // 닉네임
       ctx.font = "bold 26px sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,0.5)";
+      ctx.fillStyle = "rgba(255,255,255,0.55)";
+      ctx.textAlign = "center";
       const nameLabel = (profile.dept ? profile.dept + " · " : "") + (profile.nickname || "익명");
-      ctx.fillText(nameLabel, W/2, y); y += 44;
+      ctx.fillText(nameLabel, W/2, cy); cy += 40;
 
-      // 워터마크
+      // 하단 워터마크
       ctx.font = "22px sans-serif";
       ctx.fillStyle = "rgba(16,185,129,0.6)";
-      ctx.fillText("소통하는 양양양수 만들기", W/2, y);
+      ctx.fillText("소통하는 양양양수 만들기", W/2, cy);
 
       // 저장 — iOS 대응
       const dataUrl = canvas.toDataURL("image/png");
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      if (isIOS) {
-        const win = window.open("", "_blank");
-        if (win) {
-          win.document.write('<html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#0B131E;display:flex;flex-direction:column;align-items:center;padding:20px"><img src="' + dataUrl + '" style="max-width:100%;border-radius:16px"/><p style="color:white;text-align:center;padding:16px;font-family:sans-serif;font-size:15px">📸 이미지를 길게 눌러서 저장하세요!</p></body></html>');
+      if(isIOS){
+        const win = window.open("","_blank");
+        if(win){
+          win.document.write('<html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#0B131E;display:flex;flex-direction:column;align-items:center;padding:20px"><img src="'+dataUrl+'" style="max-width:100%;border-radius:16px"/><p style="color:white;text-align:center;padding:16px;font-family:sans-serif;font-size:15px">📸 이미지를 길게 눌러서 저장하세요!</p></body></html>');
           win.document.close();
-        } else {
-          alert("팝업이 차단됐어요. 팝업 허용 후 다시 시도해 주세요.");
-        }
+        } else { alert("팝업이 차단됐어요. 팝업 허용 후 다시 시도해 주세요."); }
       } else {
         const link = document.createElement("a");
         link.download = "소통빌런_" + result.top + "_" + (profile.nickname||"결과") + ".png";
