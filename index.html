@@ -384,7 +384,8 @@ function App() {
     setSaving(true);
     try {
       const vData = V[result.top];
-      const W = 720, H = 960;
+      const compat = COMPAT[result.top];
+      const W = 720, H = 1480;
       const canvas = document.createElement("canvas");
       canvas.width = W; canvas.height = H;
       const ctx = canvas.getContext("2d");
@@ -393,9 +394,9 @@ function App() {
       ctx.fillStyle = "#0B131E";
       ctx.fillRect(0, 0, W, H);
 
-      // 보라 그라데이션 상단
-      const grad = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, H*0.7);
-      grad.addColorStop(0, "rgba(16,185,129,0.4)");
+      // 그라데이션
+      const grad = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, H*0.5);
+      grad.addColorStop(0, "rgba(16,185,129,0.35)");
       grad.addColorStop(1, "rgba(59,130,246,0)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
@@ -407,65 +408,112 @@ function App() {
 
       // 상단 라벨
       ctx.font = "bold 22px sans-serif";
-      ctx.fillStyle = "rgba(167,139,250,0.85)";
+      ctx.fillStyle = "rgba(16,185,129,0.9)";
       ctx.textAlign = "center";
-      ctx.fillText("나도 소통빌런일까?", W/2, 110);
+      ctx.fillText("나도 소통빌런일까?", W/2, 105);
 
       // 이모지
       ctx.font = "96px serif";
-      ctx.textAlign = "center";
-      ctx.fillText(vData.emoji, W/2, 250);
+      ctx.fillText(vData.emoji, W/2, 230);
 
       // 빌런 이름
       ctx.font = "bold 52px sans-serif";
       ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
-      ctx.fillText(result.top, W/2, 320);
+      ctx.fillText(result.top, W/2, 300);
 
       // 태그라인
       ctx.font = "28px sans-serif";
       ctx.fillStyle = vData.color + "cc";
-      ctx.fillText(vData.tagline, W/2, 370);
+      ctx.fillText(vData.tagline, W/2, 348);
 
       // 태그 배지
-      const tc = {"공격형":"rgba(231,76,60,0.35)","회피형":"rgba(39,174,96,0.35)","교란형":"rgba(142,68,173,0.35)","자기중심형":"rgba(41,128,185,0.35)"};
-      const tagW = 160, tagH = 44, tagX = W/2 - tagW/2, tagY = 390;
+      const tc = {"공격형":"rgba(231,76,60,0.4)","회피형":"rgba(39,174,96,0.4)","교란형":"rgba(142,68,173,0.4)","자기중심형":"rgba(41,128,185,0.4)"};
+      const tagW = 180, tagH = 44, tagX = W/2 - tagW/2, tagY = 368;
       ctx.fillStyle = tc[vData.tag] || "rgba(255,255,255,0.15)";
       roundRect(ctx, tagX, tagY, tagW, tagH, 22);
       ctx.fill();
       ctx.font = "bold 22px sans-serif";
       ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
       ctx.fillText(vData.tag, W/2, tagY + 29);
 
       // 구분선
-      ctx.strokeStyle = "rgba(255,255,255,0.1)";
-      ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(80, 460); ctx.lineTo(W-80, 460); ctx.stroke();
+      const div = (y) => { ctx.strokeStyle="rgba(255,255,255,0.1)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(80,y); ctx.lineTo(W-80,y); ctx.stroke(); };
+      div(432);
 
       // 설명
-      ctx.font = "24px sans-serif";
+      ctx.font = "23px sans-serif";
       ctx.fillStyle = "rgba(255,255,255,0.75)";
-      ctx.textAlign = "center";
-      const descLines = wrapText(ctx, vData.desc, W - 160, 24);
-      descLines.slice(0,4).forEach((line, i) => {
-        ctx.fillText(line, W/2, 500 + i * 38);
+      const descLines = wrapText(ctx, vData.desc, W-160, 23);
+      descLines.slice(0,3).forEach((line,i) => ctx.fillText(line, W/2, 470 + i*36));
+
+      let y = 470 + Math.min(descLines.length,3)*36 + 30;
+      div(y); y += 44;
+
+      // 💡 성장 팁
+      ctx.font = "bold 26px sans-serif";
+      ctx.fillStyle = "rgba(16,185,129,0.95)";
+      ctx.fillText("💡 성장 팁", W/2, y); y += 40;
+
+      vData.tips.forEach((t) => {
+        ctx.font = "bold 22px sans-serif";
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "left";
+        ctx.fillText(t.icon + " " + t.title, 80, y); y += 30;
+        ctx.font = "19px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.6)";
+        const tLines = wrapText(ctx, t.body.split("
+")[0].replace(/→ /g,""), W-170, 19);
+        tLines.slice(0,1).forEach(line => { ctx.fillText(line, 80, y); y += 28; });
+        y += 14;
       });
 
-      // 구분선2
-      ctx.beginPath(); ctx.moveTo(80, 680); ctx.lineTo(W-80, 680); ctx.stroke();
+      ctx.textAlign = "center";
+      div(y); y += 44;
+
+      // 💞 궁합
+      if(compat) {
+        ctx.font = "bold 26px sans-serif";
+        ctx.fillStyle = "rgba(16,185,129,0.95)";
+        ctx.fillText("💞 유형별 궁합", W/2, y); y += 42;
+
+        // 잘 맞아요
+        ctx.fillStyle = "rgba(46,213,115,0.15)";
+        roundRect(ctx, 80, y, W-160, 80, 14); ctx.fill();
+        ctx.font = "bold 22px sans-serif";
+        ctx.fillStyle = "#2ed573";
+        ctx.textAlign = "left";
+        const bv = V[compat.best];
+        ctx.fillText((bv?.emoji||"") + " " + compat.best + " — 잘 맞아요 💚", 104, y+30);
+        ctx.font = "19px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.65)";
+        ctx.fillText(compat.bestDesc, 104, y+56);
+        y += 100;
+
+        // 조심해요
+        ctx.fillStyle = "rgba(255,71,87,0.15)";
+        roundRect(ctx, 80, y, W-160, 80, 14); ctx.fill();
+        ctx.font = "bold 22px sans-serif";
+        ctx.fillStyle = "#ff4757";
+        ctx.fillText((V[compat.worst]?.emoji||"") + " " + compat.worst + " — 조심해요 🔴", 104, y+30);
+        ctx.font = "19px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.65)";
+        ctx.fillText(compat.worstDesc, 104, y+56);
+        y += 110;
+      }
+
+      ctx.textAlign = "center";
+      div(y); y += 44;
 
       // 닉네임
       ctx.font = "bold 26px sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,0.55)";
-      ctx.textAlign = "center";
+      ctx.fillStyle = "rgba(255,255,255,0.5)";
       const nameLabel = (profile.dept ? profile.dept + " · " : "") + (profile.nickname || "익명");
-      ctx.fillText(nameLabel, W/2, 730);
+      ctx.fillText(nameLabel, W/2, y); y += 44;
 
-      // 하단 워터마크
+      // 워터마크
       ctx.font = "22px sans-serif";
-      ctx.fillStyle = "rgba(167,139,250,0.5)";
-      ctx.fillText("소통하는 양양양수 만들기", W/2, 820);
+      ctx.fillStyle = "rgba(16,185,129,0.6)";
+      ctx.fillText("소통하는 양양양수 만들기", W/2, y);
 
       // 저장 — iOS 대응
       const dataUrl = canvas.toDataURL("image/png");
